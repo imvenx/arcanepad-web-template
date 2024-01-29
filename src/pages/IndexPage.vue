@@ -1,6 +1,6 @@
 <template>
   <h1>Viewer</h1>
-
+  <div>Is app paused: {{ isAppPaused }}</div>
   <div style="display: grid; grid-template-columns: 50% 50%;">
     <div v-for="pad in pads">
       <Player :pad="pad" />
@@ -15,6 +15,7 @@ import { Ref, onMounted, ref } from 'vue';
 
 
 const pads: Ref<ArcanePad[]> = ref([])
+const isAppPaused = ref(false)
 
 onMounted(() => {
   init()
@@ -38,5 +39,8 @@ async function init() {
 
     pads.value.splice(pads.value.indexOf(padToRemove), 1)
   })
+
+  Arcane.msg.on(AEventName.PauseApp, (e) => isAppPaused.value = true)
+  Arcane.msg.on(AEventName.ResumeApp, (e) => isAppPaused.value = false)
 }
 </script>
